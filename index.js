@@ -34,7 +34,21 @@ app.get('/api/products/:id',async(req,res)=>{
         res.status(200).json(product);
     }
     catch(error){
-        res.status(500).send({message:error.message});
+        res.status(500).json({message:error.message});
+    }
+});
+
+app.put('/api/products/:id',async(req,res)=>{
+    try{
+        const product=await Product.findByIdAndUpdate(req.params.id,req.body)
+        if(!product){
+            res.status(400).json({message:'Product not found'});
+        }
+        const updatedProduct=await Product.findById(req.params.id);
+        res.status(200).json(updatedProduct);
+    }
+    catch(error){
+        res.status(500).send({error:error.message});
     }
 });
 

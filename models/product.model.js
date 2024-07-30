@@ -27,4 +27,4 @@ const ProdudctSchema=mongoose.Schema({
 
 const Product=mongoose.model('Product',ProdudctSchema);
 
-model.exports=Product;
+module.exports=Product;

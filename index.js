@@ -1,77 +1,22 @@
-const express=require('express');
-const mongoose=require('mongoose');
-const Product=require('./models/product.model.js');
-const app=express();
-
+const express = require('express');
+const mongoose = require('mongoose');
+const Product = require('./models/product.model.js');
+const app = express();
+const productRoute= require('./routes/product.route.js');
+//middleware
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
-
-app.get('/',(req,res)=>{
+app.use(express.urlencoded({ extended: true }));
+//routes
+app.use('/api/products',productRoute);
+app.get('/', (req, res) => {
     res.send('Hello from node api server');
 });
 
-
-app.post('/api/products',async(req,res)=>{
-    try{
-         const product= await Product.create(req.body);
-         res.status(200).json(product);
-    }catch(error){
-        res.status(500).send({message:error.message})
-    }
-});
-app.get('/api/products',async(req,res)=>{
-    try{
-            const product=await Product.find();
-            res.status(200).json(product);
-    }
-    catch(error){
-      res.status(500).send({message:error.message});
-    }
-});
-
-app.get('/api/products/:id',async(req,res)=>{
-    try{
-        const product=await Product.findById(req.params.id);
-        res.status(200).json(product);
-    }
-    catch(error){
-        res.status(500).json({message:error.message});
-    }
-});
-
-app.put('/api/products/:id',async(req,res)=>{
-    try{
-        const product=await Product.findByIdAndUpdate(req.params.id,req.body)
-        if(!product){
-            res.status(400).json({message:'Product not found'});
-        }
-        const updatedProduct=await Product.findById(req.params.id);
-        res.status(200).json(updatedProduct);
-    }
-    catch(error){
-        res.status(500).send({error:error.message});
-    }
-});
-
-app.delete('/api/products/:id',async(req,res)=>{
-    try{
-       ;
-       const product=await Product.findByIdAndDelete(req.params.id);
-         if(!product){
-              res.status(404).json({message:'Product not found'});
-         }
-            res.status(200).json({message:'Product deleted successfully'});
-    }
-    catch(error)
-    {
-        res.status(500).json({message:error.message});
-    }
-});
-
-
 mongoose.connect("mongodb+srv://sounar345:uum5oJb3D5M0fDfD@backend.vb4j5t4.mongodb.net/?retryWrites=true&w=majority&appName=Backend")
-.then(()=>{
-    console.log('Connected to database')
-    app.listen(3000,()=>{
-    console.log('Server is running on port 3000')})})
-.catch((err)=>{console.log('Error connecting to database')});
+    .then(() => {
+        console.log('Connected to database')
+        app.listen(3000, () => {
+            console.log('Server is running on port 3000')
+        })
+    })
+    .catch((err) => { console.log('Error connecting to database') });
